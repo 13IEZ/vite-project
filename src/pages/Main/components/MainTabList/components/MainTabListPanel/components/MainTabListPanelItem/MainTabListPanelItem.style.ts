@@ -15,3 +15,9 @@ export const StyledVertButton = styled(IconButton)`
   top: 0.1rem;
   right: 0.1rem;
 `;
+
+export const StyledImg = styled.img`
+  width: 100%;
+  height: 30.375rem;
+  cursor: pointer;
+`;
