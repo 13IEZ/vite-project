@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Tab, Tabs, Box, Select, MenuItem } from '@mui/material';
-import { ColorEnum } from '../../../../style/style';
+import { ColorEnum } from 'style/style';
 
 export const StyledTab = styled(Tab)`
   color: white;

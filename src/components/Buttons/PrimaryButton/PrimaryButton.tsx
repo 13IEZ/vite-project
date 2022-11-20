@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyledPrimaryButton } from './PrimaryButton.style';
+import { StyledPrimaryButton } from 'components/Buttons/PrimaryButton/PrimaryButton.style';
 
 interface IPrimaryButton {
   title: string;

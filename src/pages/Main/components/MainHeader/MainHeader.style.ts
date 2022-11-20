@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { ColorEnum } from '../../../../style/style';
+import { ColorEnum } from 'style/style';
 import { Button } from '@mui/material';
-import header_bg from '../../../../assets/images/header-bg.png';
+import header_bg from 'assets/images/header-bg.png';
 
 export const StyledHeader = styled.header`
   background-image: url(${header_bg});

@@ -1,29 +1,31 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Container, Grid } from '@mui/material';
-import MainTabListPanel from './components/MainTabListPanel/MainTabListPanel';
-import { IIMainTabListPanelItem } from './components/MainTabListPanel/components/MainTabListPanelItem/MainTabListPanelItem';
-import { ColorEnum, StyledText } from '../../../../style/style';
+import MainTabListPanel from 'pages/Main/components/MainTabList/components/MainTabListPanel/MainTabListPanel';
+import { IIMainTabListPanelItem } from 'pages/Main/components/MainTabList/components/MainTabListPanel/components/MainTabListPanelItem';
+import { ColorEnum, StyledText } from 'style/style';
 import {
   StyledSelect,
   StyledTab,
   StyledTabs,
   StyledWrapper,
   StyledMenuItem,
-} from './MainTabList.style';
-import { tabsData } from './mockData';
+} from 'pages/Main/components/MainTabList/MainTabList.style';
+import { tabsData } from 'pages/Main/components/MainTabList/mockData';
 
 interface IMainTabList {
   data: IIMainTabListPanelItem[];
   handleOpenEditFilm: (id: number) => void;
   handleDeleteFilm: (id: number) => void;
   setData: Dispatch<SetStateAction<IIMainTabListPanelItem[]>>;
+  setClickedItemToView: Dispatch<SetStateAction<IIMainTabListPanelItem | null>>;
 }
 
-const MainTabList: React.FC<IMainTabList> = ({
+export const MainTabList: React.FC<IMainTabList> = ({
   data,
   handleOpenEditFilm,
   handleDeleteFilm,
   setData,
+  setClickedItemToView,
 }) => {
   const [tabValue, setTabValue] = useState(1);
   const [filter, setFilter] = useState('1');
@@ -42,7 +44,7 @@ const MainTabList: React.FC<IMainTabList> = ({
     } else if (filter === '4') {
       setData(prev => prev.map(i => ({ ...i, isVisible: i.genre === 'Crime' })));
     }
-  }, [filter]);
+  }, [filter, setData]);
 
   return (
     <main>
@@ -82,6 +84,7 @@ const MainTabList: React.FC<IMainTabList> = ({
         </StyledText>
 
         <MainTabListPanel
+          setClickedItemToView={setClickedItemToView}
           value={tabValue}
           index={tabValue}
           items={data}
@@ -92,5 +95,3 @@ const MainTabList: React.FC<IMainTabList> = ({
     </main>
   );
 };
-
-export default MainTabList;

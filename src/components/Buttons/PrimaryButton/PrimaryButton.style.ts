@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Button } from '@mui/material';
-import { ColorEnum } from '../../../style/style';
+import { ColorEnum } from 'style/style';
 
 export const StyledPrimaryButton = styled(Button)`
   font-family: 'Montserrat', sans-serif;

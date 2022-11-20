@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { Grid, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { StyledText, ColorEnum } from '../../../../../../../../style/style';
-import { StyledListPanelItem, StyledVertButton, StyledImg } from './MainTabListPanelItem.style';
+import { StyledText, ColorEnum, StyledImg } from 'style/style';
+import {
+  StyledListPanelItem,
+  StyledVertButton,
+} from 'pages/Main/components/MainTabList/components/MainTabListPanel/components/MainTabListPanelItem.style';
 import dayjs, { Dayjs } from 'dayjs';
 
 export interface IIMainTabListPanelItem {
@@ -20,6 +23,7 @@ export interface IIMainTabListPanelItem {
 interface IMainTabListProps {
   handleOpenEditFilm: (id: number) => void;
   handleDeleteFilm: (id: number) => void;
+  setClickedItemToView: Dispatch<SetStateAction<IIMainTabListPanelItem | null>>;
 }
 
 const MainTabListPanelItem: React.FC<IIMainTabListPanelItem & IMainTabListProps> = ({
@@ -28,8 +32,12 @@ const MainTabListPanelItem: React.FC<IIMainTabListPanelItem & IMainTabListProps>
   genre,
   year,
   id,
+  runtime,
+  rating,
+  overview,
   handleOpenEditFilm,
   handleDeleteFilm,
+  setClickedItemToView,
 }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -42,7 +50,11 @@ const MainTabListPanelItem: React.FC<IIMainTabListPanelItem & IMainTabListProps>
 
   return (
     <StyledListPanelItem>
-      <Grid>
+      <Grid
+        onClick={() =>
+          setClickedItemToView({ image, title, genre, year, id, runtime, rating, overview })
+        }
+      >
         <StyledImg src={image} alt='movie poster' />
       </Grid>
 
