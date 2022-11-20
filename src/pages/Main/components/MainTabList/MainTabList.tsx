@@ -1,17 +1,49 @@
-import React, { useState } from 'react';
-import { Container, Grid, MenuItem } from '@mui/material';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Container, Grid } from '@mui/material';
 import MainTabListPanel from './components/MainTabListPanel/MainTabListPanel';
+import { IIMainTabListPanelItem } from './components/MainTabListPanel/components/MainTabListPanelItem/MainTabListPanelItem';
 import { ColorEnum, StyledText } from '../../../../style/style';
-import { StyledSelect, StyledTab, StyledTabs, StyledWrapper } from './MainTabList.style';
-import { filmsData, tabsData } from './mockData';
+import {
+  StyledSelect,
+  StyledTab,
+  StyledTabs,
+  StyledWrapper,
+  StyledMenuItem,
+} from './MainTabList.style';
+import { tabsData } from './mockData';
 
-const MainTabList = () => {
-  const [tabValue, setTabValue] = useState(0);
+interface IMainTabList {
+  data: IIMainTabListPanelItem[];
+  handleOpenEditFilm: (id: number) => void;
+  handleDeleteFilm: (id: number) => void;
+  setData: Dispatch<SetStateAction<IIMainTabListPanelItem[]>>;
+}
+
+const MainTabList: React.FC<IMainTabList> = ({
+  data,
+  handleOpenEditFilm,
+  handleDeleteFilm,
+  setData,
+}) => {
+  const [tabValue, setTabValue] = useState(1);
   const [filter, setFilter] = useState('1');
 
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => setTabValue(newValue);
   const handleChangeFilter = (event: { target: { value: string | unknown } }) =>
     setFilter(event.target.value as string);
+
+  useEffect(() => {
+    if (filter === '1') {
+      setData(prev => prev.map(i => ({ ...i, isVisible: true })));
+    } else if (filter === '2') {
+      setData(prev => prev.map(i => ({ ...i, isVisible: i.genre === 'Action' })));
+    } else if (filter === '3') {
+      setData(prev => prev.map(i => ({ ...i, isVisible: i.genre === 'Adventures' })));
+    } else if (filter === '4') {
+      setData(prev => prev.map(i => ({ ...i, isVisible: i.genre === 'Crime' })));
+    }
+  }, [filter]);
+
   return (
     <main>
       <Container maxWidth='lg'>
@@ -36,19 +68,26 @@ const MainTabList = () => {
                 onChange={e => handleChangeFilter(e)}
                 defaultValue='1'
               >
-                <MenuItem value='1'>RELEASE DATE</MenuItem>
-                <MenuItem value='4'>Action</MenuItem>
-                <MenuItem value='2'>Adventures</MenuItem>
-                <MenuItem value='3'>Crime</MenuItem>
+                <StyledMenuItem value='1'>Release Date</StyledMenuItem>
+                <StyledMenuItem value='2'>Action</StyledMenuItem>
+                <StyledMenuItem value='3'>Adventures</StyledMenuItem>
+                <StyledMenuItem value='4'>Crime</StyledMenuItem>
               </StyledSelect>
             </Grid>
           </Grid>
         </StyledWrapper>
 
         <StyledText fontSize='125%' fontWeight={400} color={ColorEnum.WHITE}>
-          <strong>39</strong> movies found
+          <strong>{data.filter(i => i.isVisible).length}</strong> movies found
         </StyledText>
-        <MainTabListPanel value={tabValue} index={tabValue} items={filmsData} />
+
+        <MainTabListPanel
+          value={tabValue}
+          index={tabValue}
+          items={data}
+          handleOpenEditFilm={handleOpenEditFilm}
+          handleDeleteFilm={handleDeleteFilm}
+        />
       </Container>
     </main>
   );

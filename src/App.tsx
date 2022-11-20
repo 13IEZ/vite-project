@@ -5,7 +5,6 @@ import { GlobalStyles } from './style/style';
 import Main from './pages/Main/Main';
 
 const App = () => {
-  // const test: any = 1;
   return (
     <>
       <CssBaseline />

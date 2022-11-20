@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { Grid, Container, Box } from '@mui/material';
 import { StyledText, ColorEnum } from '../../../../style/style';
 import { StyledHeader, StyledButton } from './MainHeader.style';
 import MainHeaderSearchbar from './components/MainHeaderSearchbar/MainHeaderSearchbar';
 
-const MainHeader = () => {
+interface IMainHeader {
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+const MainHeader: React.FC<IMainHeader> = ({ setIsOpen }) => {
   return (
     <StyledHeader>
       <Container maxWidth='lg'>
@@ -12,7 +16,7 @@ const MainHeader = () => {
           <StyledText fontSize='125%' fontWeight={300} color={ColorEnum.PINK}>
             <strong>netflix</strong>roulette
           </StyledText>
-          <StyledButton>+ add movie</StyledButton>
+          <StyledButton onClick={() => setIsOpen(true)}>+ add movie</StyledButton>
         </Grid>
         <Box sx={{ width: '90%', margin: '0 auto' }}>
           <StyledText variant='h1' fontSize='250%' fontWeight={300} color={ColorEnum.WHITE}>

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Tab, Tabs, Box, Select } from '@mui/material';
+import { Tab, Tabs, Box, Select, MenuItem } from '@mui/material';
 import { ColorEnum } from '../../../../style/style';
 
 export const StyledTab = styled(Tab)`
@@ -45,5 +45,28 @@ export const StyledSelect = styled(Select)`
 
   & .MuiSvgIcon-root {
     color: ${ColorEnum.PINK};
+  }
+`;
+
+export const StyledMenuItem = styled(MenuItem)`
+  &.MuiMenuItem-root.Mui-selected {
+    background-color: ${ColorEnum.DARKER_PINK};
+  }
+
+  &:hover {
+    background-color: ${ColorEnum.PINK};
+    color: ${ColorEnum.WHITE};
+  }
+
+  &:active {
+    background-color: ${ColorEnum.DARKER_PINK};
+  }
+
+  &:focus {
+    background-color: ${ColorEnum.DARKER_PINK};
+    color: ${ColorEnum.WHITE};
+    &:hover {
+      background-color: ${ColorEnum.PINK};
+    }
   }
 `;

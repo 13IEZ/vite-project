@@ -1,28 +1,51 @@
 import React from 'react';
-import { Grid } from '@mui/material';
+import { Grid, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { StyledText, ColorEnum } from '../../../../../../../../style/style';
-import { StyledListPanelItem, StyledVertButton } from './MainTabListPanelItem.style';
+import { StyledListPanelItem, StyledVertButton, StyledImg } from './MainTabListPanelItem.style';
+import dayjs, { Dayjs } from 'dayjs';
 
 export interface IIMainTabListPanelItem {
   title: string;
   genre: string;
   image: string;
-  year: number;
+  year: Dayjs | number;
   id: number;
+  runtime?: string;
+  rating?: string;
+  overview?: string;
+  isVisible?: boolean;
 }
 
-const MainTabListPanelItem: React.FC<IIMainTabListPanelItem> = ({
+interface IMainTabListProps {
+  handleOpenEditFilm: (id: number) => void;
+  handleDeleteFilm: (id: number) => void;
+}
+
+const MainTabListPanelItem: React.FC<IIMainTabListPanelItem & IMainTabListProps> = ({
   image,
   title,
   genre,
   year,
   id,
+  handleOpenEditFilm,
+  handleDeleteFilm,
 }) => {
-  console.log(id);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
-    <StyledListPanelItem item>
-      <img src={image} style={{ cursor: 'pointer' }} alt='movie poster' />
+    <StyledListPanelItem>
+      <Grid>
+        <StyledImg src={image} alt='movie poster' />
+      </Grid>
+
       <Grid container justifyContent='space-between' alignItems='start' marginTop='1rem'>
         <Grid item>
           <StyledText fontSize='112.5%' fontWeight={500} color={ColorEnum.GREY}>
@@ -38,13 +61,32 @@ const MainTabListPanelItem: React.FC<IIMainTabListPanelItem> = ({
           sx={{ border: `0.1rem solid ${ColorEnum.DARKER_GREY}`, borderRadius: '0.25rem' }}
         >
           <StyledText fontSize='87.5%' fontWeight={500} color={ColorEnum.GREY}>
-            {year}
+            {dayjs(year).year()}
           </StyledText>
         </Grid>
       </Grid>
-      <StyledVertButton onClick={() => console.log('vert btn')}>
+      <StyledVertButton onClick={handleClick}>
         <MoreVertIcon />
       </StyledVertButton>
+      <Menu
+        id='basic-menu'
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={() => handleDeleteFilm(id)}>Delete</MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleOpenEditFilm(id);
+            handleClose();
+          }}
+        >
+          Edit
+        </MenuItem>
+      </Menu>
     </StyledListPanelItem>
   );
 };
