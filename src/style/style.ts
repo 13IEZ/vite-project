@@ -63,3 +63,9 @@ export const StyledInput = styled(TextField)<IStyledInput>`
     }
   }
 `;
+
+export const StyledImg = styled.img`
+  width: 100%;
+  height: 30.375rem;
+  cursor: pointer;
+`;

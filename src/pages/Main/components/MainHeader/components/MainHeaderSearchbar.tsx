@@ -1,9 +1,9 @@
 import React from 'react';
 import { Grid } from '@mui/material';
-import { StyledInput } from '../../../../../../style/style';
-import { PrimaryButton } from '../../../../../../components';
+import { StyledInput } from 'style/style';
+import { PrimaryButton } from 'components';
 
-const MainHeaderSearchbar = () => {
+export const MainHeaderSearchbar = () => {
   return (
     <Grid container alignSelf='center' spacing={3} marginTop='2.5rem' paddingBottom='9.375rem'>
       <Grid item xs={9.5}>
@@ -15,5 +15,3 @@ const MainHeaderSearchbar = () => {
     </Grid>
   );
 };
-
-export default MainHeaderSearchbar;

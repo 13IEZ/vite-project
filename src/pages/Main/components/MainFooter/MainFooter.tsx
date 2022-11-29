@@ -1,9 +1,9 @@
 import React from 'react';
 import { Container, Grid } from '@mui/material';
-import { ColorEnum, StyledText } from '../../../../style/style';
-import { StyledFooter } from './MainFooter.style';
+import { ColorEnum, StyledText } from 'style/style';
+import { StyledFooter } from 'pages/Main/components/MainFooter/MainFooter.style';
 
-const MainFooter = () => {
+export const MainFooter = () => {
   return (
     <StyledFooter>
       <Container maxWidth='lg'>
@@ -16,5 +16,3 @@ const MainFooter = () => {
     </StyledFooter>
   );
 };
-
-export default MainFooter;

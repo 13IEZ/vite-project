@@ -1,2 +1,2 @@
-export * from './Buttons/PrimaryButton/PrimaryButton';
-export * from './Modals/ActionsFormModal';
+export * from 'components/Buttons/PrimaryButton/PrimaryButton';
+export * from 'components/Modals/ActionsFormModal/ActionsFormModal';

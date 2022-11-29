@@ -5,7 +5,8 @@
     "plugin:import/recommended",
     "plugin:jsx-a11y/recommended",
     "plugin:@typescript-eslint/recommended",
-    "eslint-config-prettier"
+    "eslint-config-prettier",
+    "plugin:react-hooks/recommended"
   ],
   "plugins": ["prettier"],
   "settings": {
@@ -28,6 +29,17 @@
   ],
   "rules": {
     "@typescript-eslint/no-explicit-any": ["error"],
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["../..*", "./*"],
+            "message": "Please use absolute path instead"
+          }
+        ]
+      }
+    ]
   }
 }

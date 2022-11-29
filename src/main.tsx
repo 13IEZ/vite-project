@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import ErrorBoundary from './error/ErrorBoundary';
-import App from './App';
+import ErrorBoundary from 'error/ErrorBoundary';
+import App from 'App';
 
 const app = (
   <React.StrictMode>

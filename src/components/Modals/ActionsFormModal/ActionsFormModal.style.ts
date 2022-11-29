@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
-import { ColorEnum, StyledInput } from '../../style/style';
+import { ColorEnum, StyledInput } from 'style/style';
 
 export const StyledModalBody = styled(Box)`
   position: absolute;

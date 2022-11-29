@@ -4,11 +4,14 @@ import dayjs from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { StyledModalBody, StyledFormModalInput } from './ActionsFormModal.style';
-import { PrimaryButton } from '../Buttons/PrimaryButton/PrimaryButton';
-import { ColorEnum, StyledText } from '../../style/style';
+import {
+  StyledModalBody,
+  StyledFormModalInput,
+} from 'components/Modals/ActionsFormModal/ActionsFormModal.style';
+import { PrimaryButton } from 'components/Buttons/PrimaryButton/PrimaryButton';
+import { ColorEnum, StyledText } from 'style/style';
 import CloseIcon from '@mui/icons-material/Close';
-import { IIMainTabListPanelItem } from '../../pages/Main/components/MainTabList/components/MainTabListPanel/components/MainTabListPanelItem/MainTabListPanelItem';
+import { IIMainTabListPanelItem } from 'pages/Main/components/MainTabList/components/MainTabListPanel/components/MainTabListPanelItem';
 
 interface IActionsFormModal {
   open: boolean;
@@ -45,7 +48,7 @@ export const ActionsFormModal: React.FC<IActionsFormModal> = ({
     setState(prev => ({
       ...prev,
       [e.target.name]: e.target.value,
-      id: Math.floor(Math.random() * 10000) + 1,
+      id: prev.id ?? Math.floor(Math.random() * 10000) + 1,
     }));
   };
 

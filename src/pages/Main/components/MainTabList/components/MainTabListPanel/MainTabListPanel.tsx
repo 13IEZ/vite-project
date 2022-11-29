@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import MainTabListPanelItem, {
   IIMainTabListPanelItem,
-} from './components/MainTabListPanelItem/MainTabListPanelItem';
-import { StyledBox } from './MainTabListPanel.style';
+} from 'pages/Main/components/MainTabList/components/MainTabListPanel/components/MainTabListPanelItem';
+import { StyledBox } from 'pages/Main/components/MainTabList/components/MainTabListPanel/MainTabListPanel.style';
+import { Box } from '@mui/material';
 
 interface IMainTabListPanel {
   value: number;
@@ -10,17 +11,20 @@ interface IMainTabListPanel {
   items: IIMainTabListPanelItem[];
   handleOpenEditFilm: (id: number) => void;
   handleDeleteFilm: (id: number) => void;
+  setClickedItemToView: Dispatch<SetStateAction<IIMainTabListPanelItem | null>>;
 }
+
 const MainTabListPanel: React.FC<IMainTabListPanel> = ({
   value,
   index,
   items,
   handleDeleteFilm,
   handleOpenEditFilm,
+  setClickedItemToView,
 }) => {
   return (
-    <div
-      style={{ display: 'flex', justifyContent: 'center' }}
+    <Box
+      sx={{ display: 'flex', justifyContent: 'center' }}
       role='tabpanel'
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
@@ -37,12 +41,16 @@ const MainTabListPanel: React.FC<IMainTabListPanel> = ({
               genre={i.genre}
               image={i.image}
               title={i.title}
+              runtime={i.runtime}
+              rating={i.rating}
+              overview={i.overview}
               handleOpenEditFilm={handleOpenEditFilm}
               handleDeleteFilm={handleDeleteFilm}
+              setClickedItemToView={setClickedItemToView}
             />
           ))}
       </StyledBox>
-    </div>
+    </Box>
   );
 };
 
