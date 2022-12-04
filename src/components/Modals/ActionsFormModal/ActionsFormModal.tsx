@@ -1,5 +1,7 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { Modal, Grid, IconButton } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Modal, Grid, IconButton, Checkbox, Select, MenuItem, ListItemText } from '@mui/material';
+// eslint-disable-next-line import/named
+import { SelectChangeEvent } from '@mui/material/Select';
 import dayjs from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -7,88 +9,81 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
   StyledModalBody,
   StyledFormModalInput,
-} from 'components/Modals/ActionsFormModal/ActionsFormModal.style';
-import { PrimaryButton } from 'components/Buttons/PrimaryButton/PrimaryButton';
+  MenuProps,
+  SelectStyleProps,
+} from './ActionsFormModal.style';
+import { PrimaryButton } from 'components';
 import { ColorEnum, StyledText } from 'style/style';
 import CloseIcon from '@mui/icons-material/Close';
-import { IIMainTabListPanelItem } from 'pages/Main/components/MainTabList/components/MainTabListPanel/components/MainTabListPanelItem';
+import { useSearchParams } from 'react-router-dom';
+import { useActions, useTypedSelectorHook } from 'hooks';
+import { IMovie, ISingleMovieState, GetMovieType } from 'store/types/movieTypes';
+import { genresData, newMovie } from 'pages/Main/components/MainTabList/mockData';
 
 interface IActionsFormModal {
-  open: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
-  setData: Dispatch<SetStateAction<IIMainTabListPanelItem[]>>;
-  setClickedItem: Dispatch<SetStateAction<IIMainTabListPanelItem | null>>;
-  handleEditFilm: (item: IIMainTabListPanelItem) => void;
-  item?: null | IIMainTabListPanelItem;
+  isOpen: boolean;
 }
 
-const defValue = {
-  title: '',
-  genre: '',
-  image: '',
-  year: dayjs('2014-08-18T21:11:54'),
-  runtime: '',
-  rating: '',
-  overview: '',
-  id: Math.floor(Math.random() * 10000) + 1,
-  isVisible: true,
-};
+export const ActionsFormModal: React.FC<IActionsFormModal> = ({ isOpen }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { movie } = useTypedSelectorHook(state => state.movie) as ISingleMovieState;
+  const { getMovie, addMovie, updateMovie } = useActions();
+  const isEdit = searchParams.get('isShowModal') !== 'new' && !!movie;
+  const [state, setState] = useState<IMovie>(newMovie);
 
-export const ActionsFormModal: React.FC<IActionsFormModal> = ({
-  open,
-  setIsOpen,
-  item,
-  setData,
-  setClickedItem,
-  handleEditFilm,
-}) => {
-  const [state, setState] = useState<IIMainTabListPanelItem>(defValue);
+  const handleCloseModal = () => {
+    searchParams.delete('isShowModal');
+    setSearchParams(searchParams);
+  };
 
   const handleChangeData = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const isShouldBeNumber = e.target.name === 'runtime' || e.target.name === 'vote_average';
     setState(prev => ({
       ...prev,
-      [e.target.name]: e.target.value,
-      id: prev.id ?? Math.floor(Math.random() * 10000) + 1,
+      [e.target.name]: isShouldBeNumber ? +e.target.value : e.target.value,
     }));
   };
 
-  const handleOnSave = (id?: number) => {
-    if (id) {
-      handleEditFilm(state);
-    } else {
-      setData(prevState => [...prevState, state]);
-    }
-    setClickedItem(null);
-    setState(defValue);
-    setIsOpen(false);
+  const handleChangeGenres = (event: SelectChangeEvent<typeof state.genres>) => {
+    const {
+      target: { value },
+    } = event;
+    setState(prev => ({ ...prev, genres: typeof value === 'string' ? value.split(',') : value }));
   };
 
-  const handleClose = () => {
-    setIsOpen(false);
-    setClickedItem(null);
-    setState(defValue);
+  const handleSaveMovie = () => {
+    isEdit ? updateMovie(state) : addMovie(state);
+    searchParams.delete('isShowModal');
+    setSearchParams(searchParams);
   };
 
   useEffect(() => {
-    item?.id && setState(item);
-  }, [item]);
+    const params = searchParams.get('isShowModal');
+    const id = params && params !== 'new';
+    id && getMovie(params, GetMovieType.EDIT);
+  }, [searchParams]);
+
+  useEffect(() => {
+    isEdit ? setState(movie) : setState(newMovie);
+  }, [isEdit, movie]);
+
   return (
-    <Modal open={open} onClose={handleClose}>
+    <Modal open={isOpen} onClose={() => handleCloseModal()}>
       <StyledModalBody>
         <Grid container justifyContent='end'>
-          <IconButton size='large' color='inherit' onClick={handleClose}>
+          <IconButton size='large' color='inherit' onClick={() => handleCloseModal()}>
             <CloseIcon />
           </IconButton>
         </Grid>
 
         <StyledText fontSize='250%' fontWeight={300} color={ColorEnum.WHITE}>
-          ADD MOVIE
+          {isEdit ? 'EDIT MOVIE' : 'ADD MOVIE'}
         </StyledText>
 
         <Grid container rowSpacing={2} columnSpacing={4}>
           <Grid item xs={8}>
             <StyledFormModalInput
-              value={state.title}
+              value={state?.title}
               onChange={handleChangeData}
               name='title'
               label='TITLE'
@@ -96,42 +91,55 @@ export const ActionsFormModal: React.FC<IActionsFormModal> = ({
               fullWidth
             />
             <StyledFormModalInput
-              value={state.image}
+              value={state?.poster_path}
               onChange={handleChangeData}
-              name='image'
+              name='poster_path'
               label='MOVIE URL'
               variant='outlined'
               fullWidth
             />
-            <StyledFormModalInput
-              value={state.genre}
-              onChange={handleChangeData}
-              name='genre'
-              label='GENRE'
-              variant='outlined'
+            <Select
+              sx={SelectStyleProps}
+              labelId='demo-multiple-checkbox-label'
+              id='demo-multiple-checkbox'
+              multiple
+              value={state?.genres}
+              onChange={handleChangeGenres}
+              placeholder='GENRES'
+              renderValue={selected => selected.join(', ')}
+              MenuProps={MenuProps}
               fullWidth
-            />
+            >
+              {genresData.map(name => (
+                <MenuItem key={name} value={name}>
+                  <Checkbox checked={state.genres.indexOf(name) > -1} />
+                  <ListItemText primary={name} />
+                </MenuItem>
+              ))}
+            </Select>
           </Grid>
           <Grid item xs={4}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label='RELEASE DATE'
-                value={state.year}
-                onChange={newValue => setState(prev => ({ ...prev, year: dayjs(newValue) }))}
+                value={state?.release_date}
+                onChange={newValue =>
+                  setState(prev => ({ ...prev, release_date: dayjs(newValue) }))
+                }
                 renderInput={params => <StyledFormModalInput {...params} />}
               />
             </LocalizationProvider>
 
             <StyledFormModalInput
-              value={state.rating}
+              value={state?.vote_average}
               onChange={handleChangeData}
-              name='rating'
+              name='vote_average'
               label='RATING'
               variant='outlined'
               fullWidth
             />
             <StyledFormModalInput
-              value={state.runtime}
+              value={state?.runtime}
               onChange={handleChangeData}
               name='runtime'
               label='RUNTIME'
@@ -141,7 +149,7 @@ export const ActionsFormModal: React.FC<IActionsFormModal> = ({
           </Grid>
           <Grid item xs={12}>
             <StyledFormModalInput
-              value={state.overview}
+              value={state?.overview}
               onChange={handleChangeData}
               name='overview'
               multiline
@@ -157,7 +165,7 @@ export const ActionsFormModal: React.FC<IActionsFormModal> = ({
         <Grid container justifyContent='end' alignItems='center' marginTop='2rem' columnSpacing={2}>
           <Grid item xs={2}>
             <PrimaryButton
-              clickHandler={() => setIsOpen(!open)}
+              clickHandler={() => handleCloseModal()}
               title='Reset'
               isFullWidth
               type='outlined'
@@ -165,7 +173,7 @@ export const ActionsFormModal: React.FC<IActionsFormModal> = ({
           </Grid>
           <Grid item xs={2}>
             <PrimaryButton
-              clickHandler={() => handleOnSave(item?.id)}
+              clickHandler={handleSaveMovie}
               title='Save'
               isFullWidth
               type='contained'

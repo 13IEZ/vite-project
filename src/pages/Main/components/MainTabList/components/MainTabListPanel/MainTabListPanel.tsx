@@ -1,27 +1,16 @@
-import React, { Dispatch, SetStateAction } from 'react';
-import MainTabListPanelItem, {
-  IIMainTabListPanelItem,
-} from 'pages/Main/components/MainTabList/components/MainTabListPanel/components/MainTabListPanelItem';
-import { StyledBox } from 'pages/Main/components/MainTabList/components/MainTabListPanel/MainTabListPanel.style';
+import React from 'react';
+import MainTabListPanelItem from './components/MainTabListPanelItem';
+import { StyledBox } from './MainTabListPanel.style';
 import { Box } from '@mui/material';
+import { IMovie } from 'store/types/movieTypes';
 
 interface IMainTabListPanel {
   value: number;
   index: number;
-  items: IIMainTabListPanelItem[];
-  handleOpenEditFilm: (id: number) => void;
-  handleDeleteFilm: (id: number) => void;
-  setClickedItemToView: Dispatch<SetStateAction<IIMainTabListPanelItem | null>>;
+  items: IMovie[];
 }
 
-const MainTabListPanel: React.FC<IMainTabListPanel> = ({
-  value,
-  index,
-  items,
-  handleDeleteFilm,
-  handleOpenEditFilm,
-  setClickedItemToView,
-}) => {
+const MainTabListPanel: React.FC<IMainTabListPanel> = ({ value, index, items }) => {
   return (
     <Box
       sx={{ display: 'flex', justifyContent: 'center' }}
@@ -31,24 +20,9 @@ const MainTabListPanel: React.FC<IMainTabListPanel> = ({
       aria-labelledby={`simple-tab-${index}`}
     >
       <StyledBox>
-        {items
-          .filter(i => i.isVisible)
-          .map(i => (
-            <MainTabListPanelItem
-              key={i.id}
-              id={i.id}
-              year={i.year}
-              genre={i.genre}
-              image={i.image}
-              title={i.title}
-              runtime={i.runtime}
-              rating={i.rating}
-              overview={i.overview}
-              handleOpenEditFilm={handleOpenEditFilm}
-              handleDeleteFilm={handleDeleteFilm}
-              setClickedItemToView={setClickedItemToView}
-            />
-          ))}
+        {items.map(i => (
+          <MainTabListPanelItem key={i.id} item={i} />
+        ))}
       </StyledBox>
     </Box>
   );

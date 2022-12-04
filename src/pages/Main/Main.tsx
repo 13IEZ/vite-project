@@ -1,62 +1,43 @@
 import React, { useEffect, useState } from 'react';
-import { MainHeader, MainFooter, MainTabList } from 'pages/Main/components';
-import { IIMainTabListPanelItem } from 'pages/Main/components/MainTabList/components/MainTabListPanel/components/MainTabListPanelItem';
-import { filmsData } from 'pages/Main/components/MainTabList/mockData';
+import { MainFooter, MainTabList, MainHeader } from 'pages/Main/components';
+import { useActions } from 'hooks';
 import { ActionsFormModal } from 'components';
+import { getUrlParamsFromTabs, getUrlParamsByFilter } from 'helpers';
+import { useSearchParams } from 'react-router-dom';
 
 const Main = () => {
+  const [tabValue, setTabValue] = useState(1);
+  const [filter, setFilter] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
-  const [clickedItemToEdit, setClickedItemToEdit] = useState<IIMainTabListPanelItem | null>(null);
-  const [clickedItemToView, setClickedItemToView] = useState<IIMainTabListPanelItem | null>(null);
-  const [data, setData] = useState<IIMainTabListPanelItem[]>(filmsData);
-
-  const handleDeleteFilm = (id: number) => {
-    setData(prev => prev.filter(i => i.id !== id));
-
-    if (id === clickedItemToView?.id) {
-      setClickedItemToView(null);
-    }
-  };
-
-  const handleOpenEditFilm = (id: number) => {
-    setIsOpen(true);
-    setClickedItemToEdit(data.filter(i => i.id === id)[0]);
-  };
-
-  const handleEditFilm = (item: IIMainTabListPanelItem) => {
-    setData(prev => prev.map(i => (i.id === item.id ? { ...item } : { ...i })));
-  };
+  const { getMovies } = useActions();
 
   useEffect(() => {
-    if (clickedItemToView) {
-      const refreshedIem = data.filter(i => i.id === clickedItemToView.id)[0];
-      setClickedItemToView(refreshedIem);
+    if (searchParams.get('isShowModal')) {
+      setIsOpen(true);
+    } else {
+      getMovies(searchParams.toString());
+      setIsOpen(false);
     }
-  }, [data, clickedItemToView]);
+  }, [searchParams]);
+
+  useEffect(() => {
+    const tabUrlParams = getUrlParamsFromTabs(tabValue);
+    const filterUrlParams = getUrlParamsByFilter(filter);
+    setSearchParams(Object.assign(tabUrlParams, filterUrlParams));
+  }, [tabValue, filter]);
 
   return (
     <>
-      <MainHeader
-        setIsOpen={setIsOpen}
-        clickedItemToView={clickedItemToView}
-        setClickedItemToView={setClickedItemToView}
-      />
+      <MainHeader />
       <MainTabList
-        data={data}
-        setData={setData}
-        handleOpenEditFilm={handleOpenEditFilm}
-        handleDeleteFilm={handleDeleteFilm}
-        setClickedItemToView={setClickedItemToView}
+        tabValue={tabValue}
+        setTabValue={setTabValue}
+        filter={filter}
+        setFilter={setFilter}
       />
       <MainFooter />
-      <ActionsFormModal
-        open={isOpen}
-        setIsOpen={setIsOpen}
-        setData={setData}
-        item={clickedItemToEdit}
-        setClickedItem={setClickedItemToEdit}
-        handleEditFilm={handleEditFilm}
-      />
+      <ActionsFormModal isOpen={isOpen} />
     </>
   );
 };
