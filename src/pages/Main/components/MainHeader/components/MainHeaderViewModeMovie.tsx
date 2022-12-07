@@ -1,19 +1,15 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import dayjs from 'dayjs';
 import { Grid, Container, IconButton, Box } from '@mui/material';
-import { IIMainTabListPanelItem } from 'pages/Main/components/MainTabList/components/MainTabListPanel/components/MainTabListPanelItem';
 import { ColorEnum, StyledText, StyledImg } from 'style/style';
 import SearchIcon from '@mui/icons-material/Search';
+import { useTypedSelectorHook, useActions } from 'hooks';
+import { IClickedItem } from 'store/types/movieTypes';
 
-interface IMainHeaderViewModeFilm {
-  clickedItemToView: null | IIMainTabListPanelItem;
-  setClickedItemToView: Dispatch<SetStateAction<IIMainTabListPanelItem | null>>;
-}
+export const MainHeaderViewModeMovie = () => {
+  const { clickedItem } = useTypedSelectorHook(state => state.movie) as IClickedItem;
+  const { resetClickedMovie } = useActions();
 
-export const MainHeaderViewModeFilm: React.FC<IMainHeaderViewModeFilm> = ({
-  clickedItemToView,
-  setClickedItemToView,
-}) => {
   return (
     <header>
       <Container maxWidth='lg'>
@@ -21,20 +17,20 @@ export const MainHeaderViewModeFilm: React.FC<IMainHeaderViewModeFilm> = ({
           <StyledText fontSize='125%' fontWeight={300} color={ColorEnum.PINK}>
             <strong>netflix</strong>roulette
           </StyledText>
-          <IconButton size='large' color='inherit' onClick={() => setClickedItemToView(null)}>
+          <IconButton size='large' color='inherit' onClick={() => resetClickedMovie()}>
             <SearchIcon fontSize='large' />
           </IconButton>
         </Grid>
 
         <Grid container gap={10} marginBottom='3.75rem' wrap='nowrap'>
           <Grid item xs={4}>
-            <StyledImg src={clickedItemToView?.image} alt='movie poster' />
+            <StyledImg src={clickedItem?.poster_path} alt='movie poster' />
           </Grid>
 
           <Grid item xs={8}>
             <Grid container>
               <StyledText fontSize='250%' fontWeight={300} color={ColorEnum.WHITE}>
-                {clickedItemToView?.title}
+                {clickedItem?.title}
               </StyledText>
               <Box
                 sx={{
@@ -45,26 +41,26 @@ export const MainHeaderViewModeFilm: React.FC<IMainHeaderViewModeFilm> = ({
                 }}
               >
                 <StyledText fontSize='125%' fontWeight={300} color={ColorEnum.WHITE}>
-                  {clickedItemToView?.rating}
+                  {clickedItem?.vote_average}
                 </StyledText>
               </Box>
             </Grid>
 
             <StyledText fontSize='87.5%' fontWeight={300} color={ColorEnum.GREY}>
-              {clickedItemToView?.genre}
+              {clickedItem?.genres.join(', ')}
             </StyledText>
 
             <Grid container gap={5} marginTop='1.5rem'>
               <StyledText fontSize='150%' fontWeight={300} color={ColorEnum.PINK}>
-                {dayjs(clickedItemToView?.year).year()}
+                {dayjs(clickedItem?.release_date).year()}
               </StyledText>
               <StyledText fontSize='150%' fontWeight={300} color={ColorEnum.PINK}>
-                {clickedItemToView?.runtime} min
+                {clickedItem?.runtime} min
               </StyledText>
             </Grid>
 
             <StyledText fontSize='125%' fontWeight={300} color={ColorEnum.GREY}>
-              {clickedItemToView?.overview}
+              {clickedItem?.overview}
             </StyledText>
           </Grid>
         </Grid>

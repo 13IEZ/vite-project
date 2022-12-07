@@ -29,13 +29,14 @@
   ],
   "rules": {
     "@typescript-eslint/no-explicit-any": ["error"],
+    "react-hooks/exhaustive-deps": "off",
     "prettier/prettier": "error",
     "no-restricted-imports": [
       "error",
       {
         "patterns": [
           {
-            "group": ["../..*", "./*"],
+            "group": ["../..*"],
             "message": "Please use absolute path instead"
           }
         ]

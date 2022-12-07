@@ -1,70 +1,62 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import { Grid, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { StyledText, ColorEnum, StyledImg } from 'style/style';
-import {
-  StyledListPanelItem,
-  StyledVertButton,
-} from 'pages/Main/components/MainTabList/components/MainTabListPanel/components/MainTabListPanelItem.style';
-import dayjs, { Dayjs } from 'dayjs';
-
-export interface IIMainTabListPanelItem {
-  title: string;
-  genre: string;
-  image: string;
-  year: Dayjs | number;
-  id: number;
-  runtime?: string;
-  rating?: string;
-  overview?: string;
-  isVisible?: boolean;
-}
+import { StyledListPanelItem, StyledVertButton } from './MainTabListPanelItem.style';
+import dayjs from 'dayjs';
+import { IMovie, GetMovieType } from 'store/types/movieTypes';
+import { useSearchParams } from 'react-router-dom';
+import { useActions } from 'hooks';
 
 interface IMainTabListProps {
-  handleOpenEditFilm: (id: number) => void;
-  handleDeleteFilm: (id: number) => void;
-  setClickedItemToView: Dispatch<SetStateAction<IIMainTabListPanelItem | null>>;
+  item: IMovie;
 }
 
-const MainTabListPanelItem: React.FC<IIMainTabListPanelItem & IMainTabListProps> = ({
-  image,
-  title,
-  genre,
-  year,
-  id,
-  runtime,
-  rating,
-  overview,
-  handleOpenEditFilm,
-  handleDeleteFilm,
-  setClickedItemToView,
-}) => {
+const MainTabListPanelItem: React.FC<IMainTabListProps> = ({ item }) => {
+  const { title, poster_path, genres, release_date, id } = item;
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { deleteMovie, getMovie } = useActions();
+  const isOpen = Boolean(anchorEl);
+
+  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleOpenModal = (id: number) => {
+    searchParams.set('isShowModal', id?.toString() || 'new');
+    setSearchParams(searchParams);
+    setAnchorEl(null);
+  };
+
+  const handleDeleteMovie = async (id: number) => {
+    await deleteMovie(id.toString(), searchParams.toString());
     setAnchorEl(null);
   };
 
   return (
     <StyledListPanelItem>
-      <Grid
-        onClick={() =>
-          setClickedItemToView({ image, title, genre, year, id, runtime, rating, overview })
-        }
-      >
-        <StyledImg src={image} alt='movie poster' />
+      <Grid onClick={() => id && getMovie(id.toString(), GetMovieType.VIEW)}>
+        <StyledImg src={poster_path} alt='movie poster' />
       </Grid>
 
-      <Grid container justifyContent='space-between' alignItems='start' marginTop='1rem'>
+      <Grid
+        container
+        justifyContent='space-between'
+        alignItems='start'
+        marginTop='1rem'
+        wrap='nowrap'
+      >
         <Grid item>
           <StyledText fontSize='112.5%' fontWeight={500} color={ColorEnum.GREY}>
             {title}
           </StyledText>
           <StyledText fontSize='87.5%' fontWeight={500} color={ColorEnum.DARKER_GREY}>
-            {genre}
+            {genres.join(', ')}
           </StyledText>
         </Grid>
         <Grid
@@ -73,12 +65,12 @@ const MainTabListPanelItem: React.FC<IIMainTabListPanelItem & IMainTabListProps>
           sx={{ border: `0.1rem solid ${ColorEnum.DARKER_GREY}`, borderRadius: '0.25rem' }}
         >
           <StyledText fontSize='87.5%' fontWeight={500} color={ColorEnum.GREY}>
-            {dayjs(year).year()}
+            {dayjs(release_date).year()}
           </StyledText>
         </Grid>
       </Grid>
-      <StyledVertButton onClick={handleClick}>
-        <MoreVertIcon />
+      <StyledVertButton onClick={handleOpenMenu}>
+        <MoreVertIcon color='action' />
       </StyledVertButton>
       <Menu
         id='basic-menu'
@@ -86,18 +78,11 @@ const MainTabListPanelItem: React.FC<IIMainTabListPanelItem & IMainTabListProps>
           'aria-labelledby': 'basic-button',
         }}
         anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
+        open={isOpen}
+        onClose={handleCloseMenu}
       >
-        <MenuItem onClick={() => handleDeleteFilm(id)}>Delete</MenuItem>
-        <MenuItem
-          onClick={() => {
-            handleOpenEditFilm(id);
-            handleClose();
-          }}
-        >
-          Edit
-        </MenuItem>
+        <MenuItem onClick={() => id && handleDeleteMovie(id)}>Delete</MenuItem>
+        <MenuItem onClick={() => id && handleOpenModal(id)}>Edit</MenuItem>
       </Menu>
     </StyledListPanelItem>
   );

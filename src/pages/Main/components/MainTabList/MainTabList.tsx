@@ -1,7 +1,6 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { Container, Grid } from '@mui/material';
-import MainTabListPanel from 'pages/Main/components/MainTabList/components/MainTabListPanel/MainTabListPanel';
-import { IIMainTabListPanelItem } from 'pages/Main/components/MainTabList/components/MainTabListPanel/components/MainTabListPanelItem';
+import MainTabListPanel from './components/MainTabListPanel/MainTabListPanel';
 import { ColorEnum, StyledText } from 'style/style';
 import {
   StyledSelect,
@@ -9,42 +8,29 @@ import {
   StyledTabs,
   StyledWrapper,
   StyledMenuItem,
-} from 'pages/Main/components/MainTabList/MainTabList.style';
-import { tabsData } from 'pages/Main/components/MainTabList/mockData';
+} from './MainTabList.style';
+import { tabsData, filterData } from './mockData';
+import { useTypedSelectorHook } from 'hooks';
+import { IMovieState } from 'store/types/movieTypes';
 
 interface IMainTabList {
-  data: IIMainTabListPanelItem[];
-  handleOpenEditFilm: (id: number) => void;
-  handleDeleteFilm: (id: number) => void;
-  setData: Dispatch<SetStateAction<IIMainTabListPanelItem[]>>;
-  setClickedItemToView: Dispatch<SetStateAction<IIMainTabListPanelItem | null>>;
+  tabValue: number;
+  setTabValue: Dispatch<SetStateAction<number>>;
+  filter: number;
+  setFilter: Dispatch<SetStateAction<number>>;
 }
 
 export const MainTabList: React.FC<IMainTabList> = ({
-  data,
-  handleOpenEditFilm,
-  handleDeleteFilm,
-  setData,
-  setClickedItemToView,
+  tabValue,
+  setTabValue,
+  filter,
+  setFilter,
 }) => {
-  const [tabValue, setTabValue] = useState(1);
-  const [filter, setFilter] = useState('1');
+  const { data, totalAmount } = useTypedSelectorHook(state => state.movie) as IMovieState;
 
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => setTabValue(newValue);
   const handleChangeFilter = (event: { target: { value: string | unknown } }) =>
-    setFilter(event.target.value as string);
-
-  useEffect(() => {
-    if (filter === '1') {
-      setData(prev => prev.map(i => ({ ...i, isVisible: true })));
-    } else if (filter === '2') {
-      setData(prev => prev.map(i => ({ ...i, isVisible: i.genre === 'Action' })));
-    } else if (filter === '3') {
-      setData(prev => prev.map(i => ({ ...i, isVisible: i.genre === 'Adventures' })));
-    } else if (filter === '4') {
-      setData(prev => prev.map(i => ({ ...i, isVisible: i.genre === 'Crime' })));
-    }
-  }, [filter, setData]);
+    setFilter(event.target.value as number);
 
   return (
     <main>
@@ -70,27 +56,21 @@ export const MainTabList: React.FC<IMainTabList> = ({
                 onChange={e => handleChangeFilter(e)}
                 defaultValue='1'
               >
-                <StyledMenuItem value='1'>Release Date</StyledMenuItem>
-                <StyledMenuItem value='2'>Action</StyledMenuItem>
-                <StyledMenuItem value='3'>Adventures</StyledMenuItem>
-                <StyledMenuItem value='4'>Crime</StyledMenuItem>
+                {filterData.map(i => (
+                  <StyledMenuItem key={i.id} value={i.id}>
+                    {i.title}
+                  </StyledMenuItem>
+                ))}
               </StyledSelect>
             </Grid>
           </Grid>
         </StyledWrapper>
 
         <StyledText fontSize='125%' fontWeight={400} color={ColorEnum.WHITE}>
-          <strong>{data.filter(i => i.isVisible).length}</strong> movies found
+          <strong>{totalAmount}</strong> movies found
         </StyledText>
 
-        <MainTabListPanel
-          setClickedItemToView={setClickedItemToView}
-          value={tabValue}
-          index={tabValue}
-          items={data}
-          handleOpenEditFilm={handleOpenEditFilm}
-          handleDeleteFilm={handleDeleteFilm}
-        />
+        <MainTabListPanel value={tabValue} index={tabValue} items={data} />
       </Container>
     </main>
   );
