@@ -1,5 +1,3 @@
-import dayjs from 'dayjs';
-
 export const tabsData = [
   { title: 'ALL', id: 1 },
   { title: 'FANTASY', id: 2 },
@@ -17,18 +15,4 @@ export const filterData = [
   { title: 'TITLE DESC', id: 5 },
 ];
 
-export const genresData = ['FANTASY', 'ADVENTURE', 'CRIME', 'DRAMA', 'ROMANCE', 'WAR', 'HORROR'];
-
-export const newMovie = {
-  tagline: 'not empty',
-  title: '',
-  genres: [],
-  vote_average: 0,
-  vote_count: 0,
-  release_date: dayjs('2014-08-18T21:11:54'),
-  poster_path: '',
-  overview: '',
-  budget: 0,
-  revenue: 0,
-  runtime: 0,
-};
+export const genresData = ['Fantasy', 'Adventure', 'Crime', 'Drama', 'Romance', 'War', 'Horror'];

@@ -22,7 +22,7 @@ export interface IMovie {
   id?: number;
   vote_average: number;
   vote_count: number;
-  release_date: Dayjs | Date;
+  release_date: Dayjs | Date | string;
   poster_path: string;
   overview: string;
   budget: number;
