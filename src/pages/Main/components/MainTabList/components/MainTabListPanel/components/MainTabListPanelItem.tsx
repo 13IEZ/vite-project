@@ -33,8 +33,8 @@ const MainTabListPanelItem: React.FC<IMainTabListProps> = ({ item }) => {
     setAnchorEl(null);
   };
 
-  const handleDeleteMovie = async (id: number) => {
-    await deleteMovie(id.toString(), searchParams.toString());
+  const handleDeleteMovie = (id: number) => {
+    deleteMovie(id.toString(), searchParams.toString());
     setAnchorEl(null);
   };
 
