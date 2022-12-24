@@ -2,7 +2,7 @@ import React from 'react';
 import { CssBaseline } from '@mui/material';
 import { Global } from '@emotion/react';
 import { GlobalStyles } from 'style/style';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import Main from 'pages/Main/Main';
 
 const App = () => {
@@ -11,7 +11,8 @@ const App = () => {
       <CssBaseline />
       <Global styles={GlobalStyles} />
       <Routes>
-        <Route path='/' element={<Main />} />
+        <Route path='search' element={<Main />} />
+        <Route path='*' element={<Navigate to='search' replace />} />
       </Routes>
     </>
   );
