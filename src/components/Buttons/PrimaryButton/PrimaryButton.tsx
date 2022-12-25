@@ -7,6 +7,7 @@ interface IPrimaryButton {
   isFullWidth?: boolean;
   clickHandler?: () => void;
   isSubmit?: boolean;
+  id?: string;
 }
 
 export const PrimaryButton: React.FC<IPrimaryButton> = ({
@@ -15,6 +16,7 @@ export const PrimaryButton: React.FC<IPrimaryButton> = ({
   isFullWidth,
   clickHandler,
   isSubmit,
+  id,
 }) => {
   return (
     <StyledPrimaryButton
@@ -22,6 +24,7 @@ export const PrimaryButton: React.FC<IPrimaryButton> = ({
       fullWidth={isFullWidth}
       variant={type}
       onClick={clickHandler}
+      id={id}
     >
       {title}
     </StyledPrimaryButton>
