@@ -10,7 +10,8 @@
     "lint": "eslint . --ext .ts,.tsx",
     "prepare": "husky install",
     "coverage": "vitest run --coverage",
-    "test": "vitest"
+    "test": "vitest",
+    "cypress:open": "cypress open"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -43,6 +44,7 @@
     "@typescript-eslint/parser": "^5.42.1",
     "@vitejs/plugin-react": "^2.2.0",
     "@vitest/coverage-c8": "^0.26.2",
+    "cypress": "^12.2.0",
     "eslint": "8.22.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",

@@ -39,7 +39,7 @@ const MainTabListPanelItem: React.FC<IMainTabListProps> = ({ item }) => {
   };
 
   return (
-    <StyledListPanelItem>
+    <StyledListPanelItem id={'test'}>
       <Grid onClick={() => id && getMovie(id.toString(), GetMovieType.VIEW)}>
         <StyledImg src={poster_path} alt='movie poster' />
       </Grid>

@@ -28,7 +28,6 @@ describe('movieActions', () => {
       .dispatch(getMovie('337167', GetMovieType.VIEW) as unknown as AnyAction)
       .then(() => {
         const actions = store.getActions();
-        console.log(actions);
         expect(actions[0].type).toEqual(MovieActionTypes.FETCH_VIEW_MOVIE_SUCCESS);
       });
   });
@@ -39,7 +38,6 @@ describe('movieActions', () => {
 
     return store.dispatch(getMovie('1', GetMovieType.VIEW) as unknown as AnyAction).then(() => {
       const actions = store.getActions();
-      console.log(actions);
       expect(actions[0].type).toEqual(MovieActionTypes.FETCH_VIEW_MOVIE_FAILURE);
     });
   });

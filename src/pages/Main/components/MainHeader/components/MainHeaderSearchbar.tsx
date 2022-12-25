@@ -23,6 +23,7 @@ export const MainHeaderSearchbar = () => {
           onChange={e => setValue(e.target.value)}
           label='What do you want to watch?'
           variant='outlined'
+          id='test-id-input'
           fullWidth
         />
       </Grid>
@@ -32,6 +33,7 @@ export const MainHeaderSearchbar = () => {
           title='search'
           type='contained'
           isFullWidth
+          id='test-id-btn'
         />
       </Grid>
     </Grid>
