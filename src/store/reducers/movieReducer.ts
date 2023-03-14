@@ -9,7 +9,7 @@ import {
 
 interface IMovieReducer extends IMovieState, IMovieErrorState, ISingleMovieState, IClickedItem {}
 
-const initialState: IMovieReducer = {
+export const initialState: IMovieReducer = {
   data: [],
   totalAmount: 0,
   offset: 0,
